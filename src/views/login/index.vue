@@ -39,34 +39,49 @@ export default {
       },
       loginRules: {
         // 验证规则 验证登陆表单的 key(字段名):value(数组)
-        mobile: [{ required: true, message: '请输入您的手机号' },
-          { pattern: /^1[3456789]\d{9}$/, message: '请输入合法的手机号' }],
-        code: [{ required: true, message: '请输入您的验证码' },
-          { pattern: /^\d{6}$/, message: '验证码为6位数字' }],
+        mobile: [
+          { required: true, message: '请输入您的手机号' },
+          { pattern: /^1[3456789]\d{9}$/, message: '请输入合法的手机号' }
+        ],
+        code: [
+          { required: true, message: '请输入您的验证码' },
+          { pattern: /^\d{6}$/, message: '验证码为6位数字' }
+        ],
         // 自定义函数
-        check: [{
-          validator: function (rule, value, callback) {
-            // rule当前的规则,没用
-            // value要校验的字段的值
-            if (value) {
-              // 认为校验通过
-              callback()
-            } else {
-              // 认为校验不通过
-              callback(new Error('您必须无条件同意被我们坑'))
+        check: [
+          {
+            validator: function (rule, value, callback) {
+              // rule当前的规则,没用
+              // value要校验的字段的值
+              if (value) {
+                // 认为校验通过
+                callback()
+              } else {
+                // 认为校验不通过
+                callback(new Error('您必须无条件同意被我们坑'))
+              }
             }
           }
-        }]
+        ]
       }
     }
   },
   methods: {
     // 提交登陆表单
     submitLogin () {
-      this.$refs.myForm.validate(function (isOK) {
+      this.$refs.myForm.validate((isOK) => {
         if (isOK) {
           // 认为校验登录表单成功
-          console.log('前段校验成功')
+          this.$axios({
+            url: '/authorizations',
+            method: 'post',
+            data: this.loginForm
+          }).then(result => {
+            // 成功以后进入then
+            window.localStorage.setItem('user-token', result.data.data.token) // 前端缓存令牌
+          }).catch(error => {
+            console.log(error)
+          })
         }
       })
     }
