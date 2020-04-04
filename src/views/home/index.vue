@@ -9,7 +9,10 @@
     <!-- 放置外置容器 -->
     <el-container>
       <!-- 上下布局 -->
-      <el-header>头部</el-header>
+      <el-header>
+        <!-- 头部组件 -->
+        <layout-header></layout-header>
+      </el-header>
       <!-- 主要区域 -->
       <el-main>主要区域</el-main>
     </el-container>
@@ -18,9 +21,11 @@
 
 <script>
 import layoutAside from '../../components/home/layout-aside' // 引入左侧导航组件
+import layoutHeader from '../../components/home/layout-header' // 引入头部导航组件
 export default {
   components: {
-    'layout-aside': layoutAside
+    'layout-aside': layoutAside,
+    'layout-header': layoutHeader
   },
   name: '',
   data () {
