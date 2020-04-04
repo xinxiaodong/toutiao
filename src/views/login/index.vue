@@ -69,19 +69,26 @@ export default {
   methods: {
     // 提交登陆表单
     submitLogin () {
-      this.$refs.myForm.validate((isOK) => {
+      this.$refs.myForm.validate(isOK => {
         if (isOK) {
           // 认为校验登录表单成功
           this.$axios({
             url: '/authorizations',
             method: 'post',
             data: this.loginForm
-          }).then(result => {
-            // 成功以后进入then
-            window.localStorage.setItem('user-token', result.data.data.token) // 前端缓存令牌
-          }).catch(error => {
-            console.log(error)
           })
+            .then(result => {
+              // 成功以后进入then
+              window.localStorage.setItem('user-token', result.data.data.token) // 前端缓存令牌
+              this.$router.push('/home') // 跳转到主页
+            })
+            .catch(() => {
+              // elementUI的方法
+              this.$message({
+                message: '您的手机号或者验证码不正确',
+                type: 'warning'
+              })
+            })
         }
       })
     }
