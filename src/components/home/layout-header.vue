@@ -12,12 +12,12 @@
       <el-row type="flex" justify="end" align="middle">
         <img :src="userInfo.photo ? userInfo.photo : defaultImg" alt />
         <!-- 下拉菜单 -->
-        <el-dropdown>
+        <el-dropdown @command="handle">
           <span>{{userInfo.name}}</span>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item>个人信息</el-dropdown-item>
-            <el-dropdown-item>git地址</el-dropdown-item>
-            <el-dropdown-item>退出</el-dropdown-item>
+            <el-dropdown-item command="info">个人信息</el-dropdown-item>
+            <el-dropdown-item command="git">git地址</el-dropdown-item>
+            <el-dropdown-item command="lgout">退出</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </el-row>
@@ -46,6 +46,18 @@ export default {
     }).then(result => {
       this.userInfo = result.data.data // 获取用户个人信息
     })
+  },
+  methods: {
+    handle (command) {
+      // 判断command
+      if (command === 'lgout') {
+        // 退出
+        window.localStorage.removeItem('user-token') // 删除用户的令牌
+        this.$router.push('/login') // 回到登录页
+      } else if (command === 'git') {
+        window.location.href = 'https://github.com/xinxiaodong/toutiao'
+      }
+    }
   }
 }
 </script>

@@ -8,10 +8,10 @@
       <el-form ref="myForm" style="margin-top: 30px" :model="loginForm" :rules="loginRules">
         <!-- el-form-item要放置prop=>要检验的字段名 -->
         <el-form-item prop="mobile">
-          <el-input v-model="loginForm.mobile" placeholder="请输入手机号" disabled=""></el-input>
+          <el-input v-model="loginForm.mobile" placeholder="请输入手机号"></el-input>
         </el-form-item>
         <el-form-item prop="code">
-          <el-input v-model="loginForm.code" style="width: 70%" placeholder="请输入验证码" disabled=""></el-input>
+          <el-input v-model="loginForm.code" style="width: 70%" placeholder="请输入验证码"></el-input>
           <el-button style="float:right" plain>发送验证码</el-button>
         </el-form-item>
         <el-form-item prop="check">
