@@ -35,14 +35,11 @@ export default {
     }
   },
   created () {
-    const token = window.localStorage.getItem('user-token') // 获取令牌
     // 查询数据
     this.$axios({
-      url: '/user/profile',
+      url: '/user/profile'
       // header参数
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+
     }).then(result => {
       this.userInfo = result.data.data // 获取用户个人信息
     })
