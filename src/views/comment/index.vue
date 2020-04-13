@@ -1,5 +1,5 @@
 <template>
-  <el-card>
+  <el-card v-loading="loading">
     <bread-crumb slot="header">
       <!-- 插槽内容 -->
       <template slot="title">评论列表</template>
@@ -39,6 +39,7 @@ export default {
   name: '',
   data () {
     return {
+      loading: false, // 加载状态,默认关闭
       list: [],
       page: {
         // 专门放置分页数据
@@ -58,12 +59,18 @@ export default {
     },
     // 请求评论列表
     getComment () {
+      this.loading = true // 打开状态
+
       this.$axios({
         url: '/articles',
         params: { response_type: 'comment', page: this.page.currentPage, per_page: this.page.pageSize }
       }).then(result => {
         this.list = result.data.results // 获取评论列表数据
         this.page.total = result.data.total_count // 获取文章总条数
+        // setTimeout(() => {
+        //   this.loading = false
+        // }, 300)
+        this.loading = false
       })
     },
     formatterBoolean (row, column, cellValue, index) {
