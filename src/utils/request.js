@@ -1,7 +1,9 @@
 // 对axios进行的一个封装
 import axios from 'axios'
 import router from '../router' // 路由对象实例引入
-import { Message } from 'element-ui' // 引入提示对象
+import {
+  Message
+} from 'element-ui' // 引入提示对象
 import JSONBig from 'json-bigint' // 引入第三方包
 // 请求拦截器
 axios.defaults.baseURL = 'http://ttapi.research.itcast.cn/mp/v1_0' // 赋值黑马头条的默认地址
@@ -34,6 +36,8 @@ axios.interceptors.response.use(function (response) {
       break
     case 403:
       message = '403 refresh_token未携带或已过期'
+      window.localStorage.removeItem('user-token') // 强制删除token
+
       router.push('/login') // this.$router.push()
       break
     case 507:
@@ -41,8 +45,8 @@ axios.interceptors.response.use(function (response) {
       break
     case 401:
       message = 'token过期或未出'
-      window.localStorage.clear() // 清空缓存
-      router.push('/login') // this.$router.push()
+      window.localStorage.removeItem('user-token') // 强制删除token
+        .router.push('/login') // this.$router.push()
       break
     case 404:
       message = '手机号不正确'
@@ -51,7 +55,10 @@ axios.interceptors.response.use(function (response) {
       break
   }
   // 状态码提示
-  Message({ type: 'waring', message: message })
+  Message({
+    type: 'waring',
+    message: message
+  })
   return Promise.reject(error)
 })
 export default axios
