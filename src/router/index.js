@@ -29,6 +29,11 @@ const routes = [
       // 二级路由表 素材管理
       path: 'material',
       component: () => import('../views/material') // 按需加载
+    },
+    {
+      // 二级路由列表
+      path: 'articles',
+      component: () => import('../views/articles') // 按需加载
     }]
   },
   {
