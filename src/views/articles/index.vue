@@ -46,15 +46,15 @@
     <!-- 主体 -->
     <el-row class="total"></el-row>
     <!-- 循环的模版 -->
-    <el-row class="article-item" type="flex" justify="space-between">
+    <el-row v-for="item in list" :key="item.id.toString()" class="article-item" type="flex" justify="space-between">
       <!-- 左侧 -->
       <el-col :span="14">
         <el-row type="flex">
-          <img src="../../assets/img/404.png" alt />
+          <img :src="item.cover.images.length ? item.cover.images[0] : defaultImg " alt />
           <div class="info">
-            <span>年少不听李宗盛,听懂已是不惑年</span>
-            <el-tag class="tag">标签一</el-tag>
-            <span class="date">1111111111111111</span>
+            <span>{{item.title}}</span>
+            <el-tag :type="item.status | filterType" class="tag">{{item.status | filterStatus}}</el-tag>
+            <span class="date">{{item.pubdate}}</span>
           </div>
         </el-row>
       </el-col>
@@ -79,10 +79,55 @@ export default {
         channel_id: null, // 默认为空
         dateRange: []
       },
-      channels: []
+      channels: [], // 接收频道
+      list: [], // 接收文章列表数据
+      defaultImg: require('../../assets/img/305747.jpg')
+    }
+  },
+  filters: {
+    // 处理显示状态
+    filterStatus: function (value) {
+    // value 是过滤器前面表达式计算得到的值
+      switch (value) {
+        case 0:
+          return '草稿'
+        case 1:
+          return '待审核'
+        case 2:
+          return '已发表'
+        case 3:
+          return '审核失败'
+
+        default:
+          break
+      }
+    },
+    // 处理显示颜色
+    filterType: function (value) {
+      switch (value) {
+        case 0:
+          return 'warning'
+        case 1:
+          return 'info'
+        case 2:
+          return ''
+        case 3:
+          return 'danger'
+
+        default:
+          break
+      }
     }
   },
   methods: {
+    // 获取文章
+    getArticles () {
+      this.$axios({
+        url: '/articles' // 请求地址
+      }).then(result => {
+        this.list = result.data.results // 获取文章数据
+      })
+    },
     // 获取频道
     getChannels () {
       this.$axios({
@@ -94,6 +139,7 @@ export default {
   },
   created () {
     this.getChannels() // 调用获取频道数据方法
+    this.getArticles() // 调用获取文章方法
   }
 }
 </script>
@@ -125,7 +171,7 @@ border-bottom: 1px dashed #ccc;
       flex-direction: column;
       justify-content: space-between;
       .tag{
-        width: 100px;
+        width: 60px;
       }
       .date{
         color: #999;
