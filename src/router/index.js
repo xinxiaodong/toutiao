@@ -34,6 +34,11 @@ const routes = [
       // 二级路由列表
       path: 'articles',
       component: () => import('../views/articles') // 按需加载
+    },
+    {
+      // 发布文章
+      path: 'publish',
+      component: () => import('../views/publish') // 按需加载
     }]
   },
   {
