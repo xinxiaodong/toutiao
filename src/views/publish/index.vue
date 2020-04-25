@@ -1,34 +1,40 @@
 <template>
   <el-card>
-      <bread-crumb slot="header">
+    <bread-crumb slot="header">
       <template slot="title">发布文章</template>
-      </bread-crumb>
-      <!-- 表单 -->
-      <el-form ref="publishForm" :model="formData" :rules="publishRules" style="margin-left:50px" label-width="100px">
-          <el-form-item prop="title" label="标题">
-              <el-input v-model="formData.title" style="width:60%"></el-input>
-          </el-form-item>
-          <el-form-item prop="content" label="内容">
-              <el-input v-model="formData.content" type="textarea" :rows="4"></el-input>
-          </el-form-item>
-          <el-form-item prop="type" label="封面">
-              <el-radio-group v-model="formData.cover.type ">
-                  <el-radio :label="1">单图</el-radio>
-                  <el-radio :label="3">三图</el-radio>
-                  <el-radio :label="0">无图</el-radio>
-                  <el-radio :label="-1">自动</el-radio>
-              </el-radio-group>
-          </el-form-item>
-          <el-form-item prop="channel_id" label="频道">
-              <el-select v-model="formData.channel_id" value>
-                   <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id"></el-option>
-              </el-select>
-          </el-form-item>
-          <el-form-item>
-              <el-button @click="publishArticle" type="primary">发布</el-button>
-              <el-button @click="publishArticle">存入草稿</el-button>
-          </el-form-item>
-      </el-form>
+    </bread-crumb>
+    <!-- 表单 -->
+    <el-form
+      ref="publishForm"
+      :model="formData"
+      :rules="publishRules"
+      style="margin-left:50px"
+      label-width="100px"
+    >
+      <el-form-item prop="title" label="标题">
+        <el-input v-model="formData.title" style="width:60%"></el-input>
+      </el-form-item>
+      <el-form-item prop="content" label="内容">
+        <el-input v-model="formData.content" type="textarea" :rows="4"></el-input>
+      </el-form-item>
+      <el-form-item prop="type" label="封面">
+        <el-radio-group v-model="formData.cover.type ">
+          <el-radio :label="1">单图</el-radio>
+          <el-radio :label="3">三图</el-radio>
+          <el-radio :label="0">无图</el-radio>
+          <el-radio :label="-1">自动</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item prop="channel_id" label="频道">
+        <el-select v-model="formData.channel_id" value>
+          <el-option v-for="item in channels" :key="item.id" :label="item.name" :value="item.id"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item>
+        <el-button @click="publishArticle()" type="primary">发布</el-button>
+        <el-button @click="publishArticle(true)">存入草稿</el-button>
+      </el-form-item>
+    </el-form>
   </el-card>
 </template>
 
@@ -67,10 +73,17 @@ export default {
       })
     },
     // 发布文章
-    publishArticle () {
-      this.$refs.publishForm.validate(function (isOK) {
+    publishArticle (draft) {
+      this.$refs.publishForm.validate((isOK) => {
         if (isOK) {
-
+          this.$axios({
+            url: '/articles',
+            method: 'post',
+            params: { draft }, // query参数
+            data: this.formData
+          }).then(() => {
+            this.$router.push('/home/articles') // 回到内容列表
+          })
         }
       })
     }
@@ -82,5 +95,4 @@ export default {
 </script>
 
 <style lang="less" scoped>
-
 </style>
