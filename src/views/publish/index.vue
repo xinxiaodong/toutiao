@@ -66,7 +66,7 @@ export default {
   watch: {
     $route: function (to, from) {
       if (Object.keys(to.params).length) {
-
+        this.getArticleById(to.params.articleId)
       } else {}
       this.formData = {
         title: '', // 标题
@@ -76,6 +76,17 @@ export default {
           images: [] // 存储图片的地址
 
         }
+      }
+    },
+    // 监控嵌套对象中的值
+    'formData.cover.type': function () {
+      if (this.formData.cover.type === 0 || this.formData.cover.type === -1) {
+        // 无图或自动模式
+        this.formData.cover.images = []
+      } else if (this.formData.cover.type === 1) {
+        this.formData.cover.images = [''] // 单图模式
+      } else if (this.formData.cover.type === 3) {
+        this.formData.cover.images = ['', '', ''] // 三图模式
       }
     }
   },
