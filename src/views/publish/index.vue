@@ -80,6 +80,14 @@ export default {
     }
   },
   methods: {
+    // 获取文章详情
+    getArticleById (articleId) {
+      this.$axios({
+        url: `/articles/${articleId}`
+      }).then(result => {
+        this.formData = result.data // 将指定文章数据给data
+      })
+    },
     // 获取频道
     getChannels () {
       this.$axios({
@@ -92,20 +100,42 @@ export default {
     publishArticle (draft) {
       this.$refs.publishForm.validate((isOK) => {
         if (isOK) {
+          const { articleId } = this.$route.params // 获取动态路由参数
           this.$axios({
-            url: '/articles',
-            method: 'post',
+            method: articleId ? 'put' : 'post',
+            url: articleId ? `/articles/${articleId}` : '/articles',
             params: { draft }, // query参数
             data: this.formData
           }).then(() => {
             this.$router.push('/home/articles') // 回到内容列表
           })
+          // if (articleId) {
+          //   this.$axios({
+          //     method: 'put',
+          //     url: `/articles/${articleId}`,
+          //     params: { draft }, // query参数
+          //     data: this.formData
+          //   })
+          // } else {
+          //   this.$axios({
+          //     url: '/articles',
+          //     method: 'post',
+          //     params: { draft }, // query参数
+          //     data: this.formData
+          //   }).then(() => {
+          //     this.$router.push('/home/articles') // 回到内容列表
+          //   })
+          // }
         }
       })
     }
   },
   created () {
     this.getChannels() // 接收频道数据
+    const { articleId } = this.$route.params // 获取动态路由参数
+    if (articleId) {
+      articleId && this.getArticleById(articleId)
+    }
   }
 }
 </script>
