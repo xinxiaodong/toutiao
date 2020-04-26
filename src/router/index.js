@@ -39,7 +39,12 @@ const routes = [
       // 发布文章
       path: 'publish',
       component: () => import('../views/publish') // 按需加载
-    }]
+    },
+    {
+      path: 'publish/:articleId', // 定义动态路由参数 此规则之匹配修改文章
+      component: () => import('../views/publish')
+    }
+    ]
   },
   {
   // 登录页
