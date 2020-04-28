@@ -1,7 +1,7 @@
 <template>
   <div class="cover-image">
       <div v-for="(item,index) in list" :key="index" class="cover-item">
-   <img src="../../assets/img/313400.jpg" alt="">
+   <img :src="item ? item :defaultImg" alt="">
       </div>
   </div>
 </template>
@@ -12,6 +12,7 @@ export default {
   name: '',
   data () {
     return {
+      defaultImg: require('../../assets/img/313400.jpg')
     }
   },
   methods: {}
