@@ -2,7 +2,8 @@ import LayoutAside from './home/layout-aside.vue' // 引入左侧导航组件
 import LayoutHeader from './home/layout-header.vue' // 引入头部导航组件
 import BreadCrumb from './common/bread-crumb.vue' // 引入面包屑组件
 import { quillEditor } from 'vue-quill-editor' // 调用富文本编辑器
-import coverImage from '../components/publish/cover-image.vue'
+import CoverImage from '../components/publish/cover-image.vue'
+import SelectImage from '../components/publish/select-image.vue'
 import 'quill/dist/quill.snow.css' // 富文本编辑器外部引用样式  三种样式三选一引入即可
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.bubble.css'
@@ -12,6 +13,7 @@ export default {
     Vue.component('layout-header', LayoutHeader) // 全局注册
     Vue.component('bread-crumb', BreadCrumb) // 全局注册面包屑组件
     Vue.component('quill-editor', quillEditor) // 全局注册富文本编辑器组件
-    Vue.component('cover-image', coverImage) // 注册封面组件
+    Vue.component('cover-image', CoverImage) // 注册封面组件
+    Vue.component('select-image', SelectImage) // 注册一个选择素材组件
   }
 }
