@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import eventBus from '../../utils/eventBus' // 引入公共的实例
 export default {
   name: '',
   data () {
@@ -64,6 +65,7 @@ export default {
         data
       }).then(result => {
         this.formData.photo = result.data.url // 设置头像地址
+        eventBus.$emit('updateUserInfoSuccess') // 触发一个自定义事件
         this.loading = false
       })
     },
@@ -88,6 +90,8 @@ export default {
               type: 'success',
               message: '保存信息成功'
             })
+            // 需要告诉头部组件 我更新成功了 你也要更新
+            eventBus.$emit('updateUserInfoSuccess') // 触发一个自定义事件
           })
         }
       })

@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import eventBus from '../../utils/eventBus'
 export default {
 
   data () {
@@ -36,15 +37,22 @@ export default {
   },
   created () {
     // 查询数据
-    this.$axios({
-      url: '/user/profile'
-      // header参数
-
-    }).then(result => {
-      this.userInfo = result.data // 获取用户个人信息
+    this.getUserInfo()
+    // 实例创建完毕 立刻监听
+    eventBus.$on('updateUserInfoSuccess', () => {
+      this.getUserInfo()
     })
   },
   methods: {
+    getUserInfo () {
+      this.$axios({
+        url: '/user/profile'
+        // header参数
+
+      }).then(result => {
+        this.userInfo = result.data // 获取用户个人信息
+      })
+    },
     handle (command) {
       // 判断command
       if (command === 'lgout') {
@@ -53,6 +61,8 @@ export default {
         this.$router.push('/login') // 回到登录页
       } else if (command === 'git') {
         window.location.href = 'https://github.com/xinxiaodong/toutiao'
+      } else if (command === 'info') {
+        this.$router.push('/home/account') // 跳转到帐户信息页面
       }
     }
   }
