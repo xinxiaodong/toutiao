@@ -2,9 +2,9 @@
   <!-- 先放置外层容器 -->
   <el-container>
     <!-- 左右布局 -->
-    <el-aside style="background-color:#353b4e; min-height:100vh;width:230px">
+    <el-aside :style="{width: collapse ? '60px' : '230px'}" style="transition:all 0.3s; background-color:#353b4e; min-height:100vh;">
       <!-- 放置左侧组件 -->
-      <layout-aside></layout-aside>
+      <layout-aside :collapse="collapse"></layout-aside>
     </el-aside>
     <!-- 放置外置容器 -->
     <el-container>
@@ -23,16 +23,24 @@
 </template>
 
 <script>
-
+import eventBus from '../../utils/eventBus'
 export default {
   components: {
 
   },
   name: '',
   data () {
-    return {}
+    return {
+      collapse: false
+
+    }
   },
-  methods: {}
+  methods: {},
+  created () {
+    eventBus.$on('changeCollapse', () => {
+      this.collapse = !this.collapse
+    })
+  }
 }
 </script>
 

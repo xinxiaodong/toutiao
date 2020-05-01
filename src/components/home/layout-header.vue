@@ -4,7 +4,7 @@
     <!-- 左侧 -->
     <el-col class="left" :span="6">
       <!-- 左侧图标   -->
-      <i class="el-icon-s-unfold"></i>
+      <i @click="collapseOrOpen" :class="{'el-icon-s-unfold': collapse,'el-icon-s-fold': !collapse}"></i>
       <span class="title">江苏传智播客教育科技股份有限公司</span>
     </el-col>
     <!-- 右侧 -->
@@ -31,6 +31,7 @@ export default {
 
   data () {
     return {
+      collapse: false, // 是否折叠  默认为否
       userInfo: {}, // 用户信息
       defaultImg: require('../../assets/img/305747.jpg') // 先把地址转换成变量
     }
@@ -44,6 +45,13 @@ export default {
     })
   },
   methods: {
+    // 折叠
+    collapseOrOpen () {
+      // 直接取反
+      this.collapse = !this.collapse
+
+      eventBus.$emit('changeCollapse') // 改变了折叠状态
+    },
     getUserInfo () {
       this.$axios({
         url: '/user/profile'
@@ -78,6 +86,9 @@ export default {
       margin-left: 4px;
       color: #2c3e50;
       font-size: 16px;
+    }
+    i{
+      font-size: 22px;
     }
   }
   .right {
