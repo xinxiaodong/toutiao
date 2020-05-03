@@ -73,42 +73,38 @@ export default {
   },
   methods: {
     // 删除素材
-    delMaterial (id) {
-      this.$confirm('您确定要删除该素材吗').then(() => {
-        this.$axios({
-          url: `/user/images/${id}`,
-          method: 'delete'
-        }).then(() => {
-          this.getAllMaterial()
-        })
+    async delMaterial (id) {
+      await this.$confirm('您确定要删除该素材吗')
+      await this.$axios({
+        url: `/user/images/${id}`,
+        method: 'delete'
       })
+      this.getAllMaterial()
     },
     // 收藏或者取消收藏
-    collectOrCancel (row) {
-      this.$axios({
+    async collectOrCancel (row) {
+      await this.$axios({
         url: `/user/images/${row.id}`,
         method: 'put',
         data: {
           collect: !row.is_collected // 状态取反
         }
-      }).then(() => {
-        this.getAllMaterial()
       })
+      this.getAllMaterial()
     },
     // 上传图片
-    uploadImg (params) {
+    async uploadImg (params) {
       this.loading = true // 打开进度条
       const form = new FormData()
       form.append('image', params.file) // 添加文件到form
-      this.$axios({
+      await this.$axios({
         url: 'user/images',
         method: 'post',
         data: form // FormData数据
-      }).then(result => {
-        // 说明已经成功上传一张图片
-        this.loading = false // 关闭进度条
-        this.getAllMaterial()
       })
+      // 说明已经成功上传一张图片
+      this.loading = false // 关闭进度条
+      this.getAllMaterial()
     },
     // 切换页码
     changePage (newPage) {
@@ -121,18 +117,17 @@ export default {
       this.getAllMaterial()
     },
     // 获取所有素材
-    getAllMaterial () {
-      this.$axios({
+    async getAllMaterial () {
+      const result = await this.$axios({
         url: '/user/images',
         params: {
           collect: this.activeName === 'collect',
           page: this.page.currentPage,
           per_page: this.page.pageSize
         }
-      }).then(result => {
-        this.list = result.data.results
-        this.page.total = result.data.total_count // 图片总数
       })
+      this.list = result.data.results
+      this.page.total = result.data.total_count // 图片总数
     }
   },
   created () {

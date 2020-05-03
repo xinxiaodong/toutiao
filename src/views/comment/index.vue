@@ -58,20 +58,19 @@ export default {
       this.getComment()
     },
     // 请求评论列表
-    getComment () {
+    async getComment () {
       this.loading = true // 打开状态
 
-      this.$axios({
+      const result = await this.$axios({
         url: '/articles',
         params: { response_type: 'comment', page: this.page.currentPage, per_page: this.page.pageSize }
-      }).then(result => {
-        this.list = result.data.results // 获取评论列表数据
-        this.page.total = result.data.total_count // 获取文章总条数
-        // setTimeout(() => {
-        //   this.loading = false
-        // }, 300)
-        this.loading = false
       })
+      this.list = result.data.results // 获取评论列表数据
+      this.page.total = result.data.total_count // 获取文章总条数
+      // setTimeout(() => {
+      //   this.loading = false
+      // }, 300)
+      this.loading = false
     },
     formatterBoolean (row, column, cellValue, index) {
       // row 当前行数据
@@ -81,29 +80,27 @@ export default {
       return cellValue ? '正常' : '关闭'
     },
     // 打开或者关闭评论方法
-    openOrClose (row) {
+    async openOrClose (row) {
       const mess = row.comment_status ? '关闭' : '打开'
       // $confirm确定时进入then 取消时进入catch
-      this.$confirm(`你确定要${mess}评论吗?`).then(() => {
-        // 用户确定要调用接口
-        this.$axios({
-          method: 'put',
-          url: '/comments/status',
-          params: {
-            article_id: row.id.toString()
-          },
-          data: {
-            allow_comment: !row.comment_status
-          }
-        }).then(result => {
-          // 打开或者关闭评论成功之后
-          this.$message({
-            type: 'success',
-            message: '操作成功'
-          })
-          this.getComment() // 重新请求列表
-        })
+      await this.$confirm(`你确定要${mess}评论吗?`)
+      // 用户确定要调用接口
+      await this.$axios({
+        method: 'put',
+        url: '/comments/status',
+        params: {
+          article_id: row.id.toString()
+        },
+        data: {
+          allow_comment: !row.comment_status
+        }
       })
+      // 打开或者关闭评论成功之后
+      this.$message({
+        type: 'success',
+        message: '操作成功'
+      })
+      this.getComment() // 重新请求列表
     }
   },
   created () {
